@@ -28,11 +28,19 @@ public class ExecuteServiceImpl implements ExecuteService {
 				indexesOfLeft.add(i);
 			}
 			else if(cmds[i]==']'){
-				int tmp = indexesOfLeft.get(indexesOfLeft.size()-1);
-				indexLeftToRight.put(tmp, i);
-				indexRightToLeft.put(i, tmp);
-				indexesOfLeft.remove(indexesOfLeft.size()-1);
+				if(indexesOfLeft.isEmpty()){
+					return "MMP";
+				}
+				else{
+					int tmp = indexesOfLeft.get(indexesOfLeft.size()-1);
+					indexLeftToRight.put(tmp, i);
+					indexRightToLeft.put(i, tmp);
+					indexesOfLeft.remove(indexesOfLeft.size()-1);
+				}
 			}
+		}
+		if(!indexesOfLeft.isEmpty()){
+			return "NMH";
 		}
 		
 		//	执行代码
