@@ -90,8 +90,23 @@ public class ExecuteServiceImpl implements ExecuteService {
 
 	@Override
 	public String OOKExecute(String code, String param) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder(code);
+		for(int i=0; i<code.length(); i++){
+			if(i+9<=code.length() && (code.substring(i, i+3) + code.substring(i+4, i+8)).equals("Ook Ook")){
+				switch(code.substring(i, i+9)){
+				case "Ook. Ook?":	sb.replace(i, i+9, ">        ");	break;	//	添8个空格以保持总长度不变,下同
+				case "Ook? Ook.":	sb.replace(i, i+9, "<        ");	break;
+				case "Ook. Ook.":	sb.replace(i, i+9, "+        ");	break;
+				case "Ook! Ook!":	sb.replace(i, i+9, "-        ");	break;
+				case "Ook. Ook!":	sb.replace(i, i+9, ",        ");	break;
+				case "Ook! Ook.":	sb.replace(i, i+9, ".        ");	break;
+				case "Ook! Ook?":	sb.replace(i, i+9, "[        ");	break;
+				case "Ook? Ook!":	sb.replace(i, i+9, "]        ");	break;
+				}
+				i += 8;
+			}
+		}
+		return BFExecute(sb.toString().replaceAll(" ", ""), param);
 	}
 
 }
