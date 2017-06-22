@@ -3,6 +3,7 @@ package serviceImpl;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import service.ExecuteService;
 
@@ -13,11 +14,28 @@ public class ExecuteServiceImpl implements ExecuteService {
 	 */
 	@Override
 	public String execute(String code, String param) throws RemoteException {
+		HashMap<Integer, Integer> indexLeftToRight = new HashMap<Integer, Integer>();	//	[ -> ]
+		HashMap<Integer, Integer> indexRightToLeft= new HashMap<Integer, Integer>();	//	] -> [
 		ArrayList<Character> memory = new ArrayList<Character>();	//	内存
 		StringBuilder output = new StringBuilder();	//	输出
 		char[] cmds = code.toCharArray();	//	代码
 		int index = 0;	//	输入指针
 		int ptr = 0;	//	内存指针
+		//	遍历代码，记录"["与"]"的位置
+		ArrayList<Integer> indexesOfLeft = new ArrayList<Integer>();
+		for(int i=0; i<cmds.length; i++){
+			if(cmds[i]=='['){
+				indexesOfLeft.add(i);
+			}
+			else if(cmds[i]==']'){
+				int tmp = indexesOfLeft.get(indexesOfLeft.size()-1);
+				indexLeftToRight.put(tmp, i);
+				indexRightToLeft.put(i, tmp);
+				indexesOfLeft.remove(indexesOfLeft.size()-1);
+			}
+		}
+		
+		//	执行代码
 		memory.add('\0');
 		for(int i=0; i<cmds.length; i++){
 			switch(cmds[i]){
@@ -29,6 +47,10 @@ public class ExecuteServiceImpl implements ExecuteService {
 				break;
 			case '<':
 				ptr--;
+				if(ptr<0){
+					memory.add(0, '\0');
+					ptr = 0;
+				}
 				break;
 			case '+':
 				memory.set(ptr, (char)(memory.get(ptr)+1));
@@ -44,24 +66,12 @@ public class ExecuteServiceImpl implements ExecuteService {
 				break;
 			case '[':
 				if(memory.get(ptr)=='\0'){
-					int tmp = code.substring(i).indexOf(']');
-					if(tmp<0){
-						return "nmh";
-					}
-					else{
-						i += tmp;
-					}
+					i = indexLeftToRight.get(i);
 				}
 				break;
 			case ']':
 				if(memory.get(ptr)!='\0'){
-					int tmp = code.substring(0, i).lastIndexOf('[');
-					if(tmp<0){
-						return "mmp";
-					}
-					else{
-						i = tmp;
-					}
+					i = indexRightToLeft.get(i);
 				}
 				break;
 			default:
