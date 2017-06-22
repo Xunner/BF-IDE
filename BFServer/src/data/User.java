@@ -13,7 +13,6 @@ public class User implements Serializable{
 	private String name;
 	private String password;
 	private ImageView avatar;
-	private boolean isLoggedIn;
 	ArrayList<String> fileNamesOfCodes;
 	
 	public User(String name, String password){
@@ -21,7 +20,6 @@ public class User implements Serializable{
 		this.password = password;
 		fileNamesOfCodes = new ArrayList<String>();
 		this.avatar = null;
-		this.isLoggedIn = false;
 	}
 	
 	public void setPassword(String newPassword){
@@ -50,24 +48,6 @@ public class User implements Serializable{
 	
 	public String getPassword(){
 		return password;
-	}
-	
-	public boolean isLoggedIn(){
-		return this.isLoggedIn;
-	}
-	
-	public boolean logIn(){
-		if(isLoggedIn==true){
-			return false;
-		}
-		else{
-			this.isLoggedIn = true;
-			return true;
-		}
-	}
-	
-	public void logOut(){
-		this.isLoggedIn = false;
 	}
 
 	@Override

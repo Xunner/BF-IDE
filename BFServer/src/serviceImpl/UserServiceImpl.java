@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService{
 		boolean ret = false;
 		for(User u : list){
 			if(u.toString().equals(username) && u.isPasswordCorrect(password)){
-				ret = u.logIn();
+				ret = true;
 			}
 		}
 		writeList();
@@ -62,7 +62,6 @@ public class UserServiceImpl implements UserService{
 		boolean ret = false;
 		for(User u : list){
 			if(u.toString().equals(username)){
-				u.logOut();
 				ret = true;
 			}
 		}
