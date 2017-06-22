@@ -1,0 +1,17 @@
+.label, .menu, .menu-item, .button, .text-area, .text-field, .titled-pane{
+	-fx-font-family: KaiTi, fantasy;
+	-fx-font-size: 24;
+}
+
+.titled-pane{
+	-fx-font-size: 28;
+	-fx-border-radius: 50;
+	-fx-background-radius: 50;
+	-fx-opacity: 0.92;
+}
+
+.menu, .menu-item, .button, .text-field{
+	-fx-background-radius: 20;
+	-fx-border-radius: 20;
+}
+

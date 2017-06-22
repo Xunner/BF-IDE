@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<AnchorPane stylesheets="@javafx.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.MainFrameController">
+   <children>
+      <BorderPane>
+         <top>
+            <MenuBar BorderPane.alignment="CENTER">
+              <menus>
+                <Menu mnemonicParsing="false" text="开始">
+                  <items>
+                        <MenuItem mnemonicParsing="false" onAction="#clickSaveMenuItem" text="保存" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" onAction="#clickExitMenuItem" text="退出" />
+                  </items>
+                </Menu>
+                <Menu fx:id="openMenu" mnemonicParsing="false" text="打开" />
+                <Menu mnemonicParsing="false" text="运行">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#clickExecuteMenuItem" text="执行" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="帮助">
+                    <items>
+                    <MenuItem mnemonicParsing="false" onAction="#clickAboutMenuItem" text="关于" />
+                    </items>
+                  </Menu>
+              </menus>
+            </MenuBar>
+         </top>
+         <center>
+            <TextArea fx:id="codeArea" prefHeight="400.0" prefWidth="800.0" promptText="请开始你的表演：" BorderPane.alignment="CENTER" />
+         </center>
+         <bottom>
+            <VBox>
+               <children>
+                  <Separator prefHeight="8.0" prefWidth="200.0" />
+                  <HBox BorderPane.alignment="CENTER">
+                     <children>
+                        <TextArea fx:id="inputArea" prefHeight="200.0" prefWidth="400.0" promptText="输入" />
+                        <Separator orientation="VERTICAL" prefWidth="8.0" />
+                        <TextArea fx:id="outputArea" prefHeight="200.0" prefWidth="400.0" promptText="输出" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </bottom>
+      </BorderPane>
+      <TitledPane fx:id="loggedInPane" animated="false" expanded="false" text="已登录" AnchorPane.rightAnchor="0.0">
+         <content>
+            <FlowPane opacity="0.8" prefHeight="200.0" prefWidth="200.0" vgap="10.0">
+               <children>
+                  <ImageView fx:id="userDisplayPicture" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="userName" alignment="CENTER" prefWidth="200.0" text="用户名" />
+                  <Button mnemonicParsing="false" onAction="#clickLogOutButton" prefWidth="200.0" text="退出登录" />
+               </children>
+            </FlowPane>
+         </content>
+      </TitledPane>
+   </children>
+</AnchorPane>

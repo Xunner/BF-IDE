@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#typeKey" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.LogInInterfaceController">
+   <children>
+      <VBox alignment="CENTER_LEFT" layoutX="150.0" layoutY="86.0" prefHeight="270.0" prefWidth="300.0" spacing="25.0">
+         <children>
+            <TextField fx:id="userIdTextField" promptText="用户名" />
+            <PasswordField fx:id="passwordField" promptText="密码" />
+            <CheckBox fx:id="isRememberPassword" mnemonicParsing="false" text="记住密码" />
+            <HBox alignment="CENTER" spacing="25.0">
+               <children>
+                  <Button fx:id="logInButton" mnemonicParsing="false" onAction="#clickLogInButton" prefHeight="40.0" prefWidth="100.0" text="登录" />
+                  <Button fx:id="registerButton" mnemonicParsing="false" onAction="#clickRegisterButton" prefHeight="40.0" prefWidth="100.0" text="注册" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Label fx:id="nameLabel" layoutX="250.0" layoutY="58.0" />
+   </children>
+</AnchorPane>
