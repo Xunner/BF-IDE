@@ -68,7 +68,7 @@ public class MainFrameController {
 			}
 			try {
 				RemoteHelper.getInstance().getIOService().writeFile(codeArea.getText(), userName.getText(), localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE) + '-' + time);
-				// TODO 刷新历史版本菜单
+				refreshOpenMenu();
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -143,6 +143,7 @@ public class MainFrameController {
 	
 	public void setUserData(String userId){
 		userName.setText(userId);
+		refreshOpenMenu();
 		// TODO 加载头像功能
 	}
 	
@@ -171,5 +172,54 @@ public class MainFrameController {
 			cmi.setSelected(false);
 		}
 		OOKMenuItem.setSelected(true);
+	}
+	
+	public void refreshOpenMenu(){
+		try {
+			String[] fileList = RemoteHelper.getInstance().getIOService().readFileList(userName.getText()).split(System.lineSeparator());
+			openMenu.getItems().clear();
+			for(String fileName : fileList){
+				CheckMenuItem menuItem = new CheckMenuItem(fileName);
+				menuItem.setOnAction(e -> {
+					if(!isSaved){
+						Alert alert = new Alert(AlertType.CONFIRMATION, "要保存当前代码吗？", 
+								new ButtonType("是", ButtonData.YES),
+								new ButtonType("否", ButtonData.NO),
+								new ButtonType("取消", ButtonData.CANCEL_CLOSE));
+						alert.setTitle("确认");
+						alert.setHeaderText("当前代码尚未保存");
+						alert.showAndWait().ifPresent(response -> {
+							if(response != ButtonType.CANCEL){
+								if(response == ButtonType.YES){	//	若选“是”：保存
+									clickSaveMenuItem(null);
+								}
+								openAFile(fileName, menuItem);
+							}
+						});
+					}
+					else{
+						openAFile(fileName, menuItem);
+					}
+				});
+				openMenu.getItems().add(menuItem);
+			}
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void openAFile(String fileName, CheckMenuItem menuItem){
+		//	从服务器获取并显示该版本的代码
+		try {
+			codeArea.setText(RemoteHelper.getInstance().getIOService().readFile(userName.getText(), fileName));
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
+		}
+		
+		//	刷新子菜单选中状况
+		for(MenuItem mi : openMenu.getItems()){
+			((CheckMenuItem)mi).setSelected(false);
+		}
+		menuItem.setSelected(true);
 	}
 }
