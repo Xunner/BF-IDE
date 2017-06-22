@@ -12,5 +12,7 @@ public interface ExecuteService extends Remote {
 	 * @return 运行结果
 	 * @throws RemoteException
 	 */
-	public String execute(String code, String param) throws RemoteException;
+	public String BFExecute(String code, String param) throws RemoteException;
+	
+	public String OOKExecute(String code, String param) throws RemoteException;
 }

@@ -61,9 +61,15 @@ public class DataRemoteObject extends UnicastRemoteObject implements IOService, 
 	}
 
 	@Override
-	public String execute(String code, String param) throws RemoteException {
+	public String BFExecute(String code, String param) throws RemoteException {
 		// TODO Auto-generated method stub
-		return executeService.execute(code, param);
+		return executeService.BFExecute(code, param);
+	}
+
+	@Override
+	public String OOKExecute(String code, String param) throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

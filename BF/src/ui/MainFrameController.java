@@ -13,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 
 import javafx.scene.control.TextArea;
@@ -21,10 +22,17 @@ import javafx.scene.image.ImageView;
 import rmi.RemoteHelper;
 
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 
 public class MainFrameController {
 	@FXML
 	private Menu openMenu;
+	@FXML
+	private Menu languageMenu;
+	@FXML
+	private CheckMenuItem BFMenuItem;
+	@FXML
+	private CheckMenuItem OOKMenuItem;
 	@FXML
 	private TextArea codeArea;
 	@FXML
@@ -93,8 +101,22 @@ public class MainFrameController {
 	// Event Listener on MenuItem.onAction
 	@FXML
 	public void clickExecuteMenuItem(ActionEvent event) {
+		String language = null;
+		for(MenuItem mi : languageMenu.getItems()){
+			CheckMenuItem cmi = (CheckMenuItem) mi;
+			if(cmi.isSelected()){
+				language = cmi.getText();
+				break;
+			}
+		}
 		try {
-			outputArea.setText(RemoteHelper.getInstance().getExecuteService().execute(codeArea.getText(), inputArea.getText()));
+			switch(language){
+			case "BF":
+				outputArea.setText(RemoteHelper.getInstance().getExecuteService().BFExecute(codeArea.getText(), inputArea.getText()));
+				break;
+			case "OOK":
+				outputArea.setText(RemoteHelper.getInstance().getExecuteService().OOKExecute(codeArea.getText(), inputArea.getText()));
+			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -131,5 +153,23 @@ public class MainFrameController {
 			e.printStackTrace();
 		}
 		ui.Main.exit();
+	}
+	
+	@FXML
+	public void selectBFLanguage(ActionEvent event){
+		for(MenuItem mi : languageMenu.getItems()){
+			CheckMenuItem cmi = (CheckMenuItem) mi;
+			cmi.setSelected(false);
+		}
+		BFMenuItem.setSelected(true);
+	}
+	
+	@FXML
+	public void selectOOKLanguage(ActionEvent event){
+		for(MenuItem mi : languageMenu.getItems()){
+			CheckMenuItem cmi = (CheckMenuItem) mi;
+			cmi.setSelected(false);
+		}
+		OOKMenuItem.setSelected(true);
 	}
 }

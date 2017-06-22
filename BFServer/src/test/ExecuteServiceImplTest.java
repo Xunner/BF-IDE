@@ -42,7 +42,7 @@ public class ExecuteServiceImplTest {
 	@Test
 	public void testExecute() {
 		try {
-			assertEquals(result, esi.execute(code, param));
+			assertEquals(result, esi.BFExecute(code, param));
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

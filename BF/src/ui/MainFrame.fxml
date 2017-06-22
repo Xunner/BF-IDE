@@ -25,6 +25,12 @@
                     <MenuItem mnemonicParsing="false" onAction="#clickExecuteMenuItem" text="执行" />
                   </items>
                 </Menu>
+                  <Menu fx:id="languageMenu" mnemonicParsing="false" text="语言">
+                    <items>
+                        <CheckMenuItem fx:id="BFMenuItem" mnemonicParsing="false" onAction="#selectBFLanguage" selected="true" text="BF" />
+                        <CheckMenuItem fx:id="OOKMenuItem" mnemonicParsing="false" onAction="#selectOOKLanguage" text="OOK" />
+                    </items>
+                  </Menu>
                   <Menu mnemonicParsing="false" text="帮助">
                     <items>
                     <MenuItem mnemonicParsing="false" onAction="#clickAboutMenuItem" text="关于" />

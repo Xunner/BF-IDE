@@ -13,7 +13,7 @@ public class ExecuteServiceImpl implements ExecuteService {
 	 * 请实现该方法
 	 */
 	@Override
-	public String execute(String code, String param) throws RemoteException {
+	public String BFExecute(String code, String param) throws RemoteException {
 		HashMap<Integer, Integer> indexLeftToRight = new HashMap<Integer, Integer>();	//	[ -> ]
 		HashMap<Integer, Integer> indexRightToLeft= new HashMap<Integer, Integer>();	//	] -> [
 		ArrayList<Character> memory = new ArrayList<Character>();	//	内存
@@ -78,6 +78,12 @@ public class ExecuteServiceImpl implements ExecuteService {
 			}
 		}
 		return output.toString();
+	}
+
+	@Override
+	public String OOKExecute(String code, String param) throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
