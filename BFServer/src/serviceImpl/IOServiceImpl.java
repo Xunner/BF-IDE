@@ -29,7 +29,7 @@ public class IOServiceImpl implements IOService{
 			ArrayList<User> list = UserServiceImpl.getUserList();	//	用户清单
 			for(User u : list){
 				if(u.toString().equals(userId)){
-					u.addFileName(formatFileName(userId, fileName));
+					u.addFileName(fileName);
 					
 					//	写入list
 					UserServiceImpl.writeList();

@@ -19,6 +19,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import rmi.RemoteHelper;
 
 import javafx.scene.control.Menu;
@@ -67,8 +69,15 @@ public class MainFrameController {
 				time = time.substring(0, time.lastIndexOf('.'));
 			}
 			try {
-				RemoteHelper.getInstance().getIOService().writeFile(codeArea.getText(), userName.getText(), localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE) + '-' + time);
+				String fileName = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE) + '-' + time;
+				RemoteHelper.getInstance().getIOService().writeFile(codeArea.getText(), userName.getText(), fileName);
 				refreshOpenMenu();
+				for(MenuItem mi : openMenu.getItems()){
+					if(mi.getText().equals(fileName)){
+						((CheckMenuItem)mi).setSelected(true);
+						break;
+					}
+				}
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -89,8 +98,8 @@ public class MainFrameController {
 			alert.setTitle("确认");
 			alert.setHeaderText("当前代码尚未保存");
 			alert.showAndWait().ifPresent(response -> {
-				if(response != ButtonType.CANCEL){
-					if(response == ButtonType.YES){
+				if(response.getButtonData() != ButtonData.CANCEL_CLOSE){
+					if(response.getButtonData() == ButtonData.YES){
 						clickSaveMenuItem(null);
 					}
 					exit();
@@ -189,8 +198,8 @@ public class MainFrameController {
 						alert.setTitle("确认");
 						alert.setHeaderText("当前代码尚未保存");
 						alert.showAndWait().ifPresent(response -> {
-							if(response != ButtonType.CANCEL){
-								if(response == ButtonType.YES){	//	若选“是”：保存
+							if(response.getButtonData() != ButtonData.CANCEL_CLOSE){
+								if(response.getButtonData() == ButtonData.YES){	//	若选“是”：保存
 									clickSaveMenuItem(null);
 								}
 								openAFile(fileName, menuItem);
@@ -221,5 +230,38 @@ public class MainFrameController {
 			((CheckMenuItem)mi).setSelected(false);
 		}
 		menuItem.setSelected(true);
+		
+		isSaved = true;
+	}
+	
+	@FXML
+	public void pressKey(KeyEvent event){
+		switch(event.getCode()){
+		case S:
+			if(event.isControlDown()){
+				clickSaveMenuItem(null);
+			}
+		case Z:
+			if(event.isControlDown()){
+				//	TODO
+			}
+		case Y:
+			if(event.isControlDown()){
+				//	TODO
+			}
+		default:
+		}
+	}
+	
+	@FXML
+	public void releaseKey(KeyEvent event){
+		switch(event.getCode()){
+		case ESCAPE:
+			clickExitMenuItem(null);
+			break;
+		case F11:
+			clickExecuteMenuItem(null);
+		default:
+		}
 	}
 }

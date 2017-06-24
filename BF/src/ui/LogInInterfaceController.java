@@ -58,6 +58,8 @@ public class LogInInterfaceController {
 				e.printStackTrace();
 			}
 		}
+		
+		root.requestFocus();
 	}
 	
 	// Event Listener on Button[#logInButton].onAction

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<AnchorPane stylesheets="@javafx.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.MainFrameController">
+<AnchorPane onKeyPressed="#pressKey" onKeyReleased="#releaseKey" stylesheets="@javafx.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.MainFrameController">
    <children>
       <BorderPane>
          <top>
