@@ -100,6 +100,7 @@ public class UserServiceImpl implements UserService{
 		for(User u : list){
 			System.out.println("用户名："+u+"；密码："+u.getPassword());
 		}
+		System.out.println();
 	}
 
 	public static ArrayList<User> getUserList(){

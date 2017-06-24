@@ -64,7 +64,7 @@ public class MainFrameController {
 			LocalDateTime localDateTime = LocalDateTime.now();
 			String time = localDateTime.format(DateTimeFormatter.ISO_LOCAL_TIME).replaceAll(":", "-");
 			if(time.contains(".")){
-				time = time.substring(0, time.charAt('.'));
+				time = time.substring(0, time.lastIndexOf('.'));
 			}
 			try {
 				RemoteHelper.getInstance().getIOService().writeFile(codeArea.getText(), userName.getText(), localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE) + '-' + time);

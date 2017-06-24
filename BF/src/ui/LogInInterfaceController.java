@@ -7,6 +7,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 import javafx.event.ActionEvent;
@@ -37,6 +43,21 @@ public class LogInInterfaceController {
 
 	public void init(){
 		nameLabel.setText(ui.Main.Name);
+		File file = new File("user.txt");
+		
+		//	加载用户密码（密码反转加载）
+		if(file.exists()){
+			try(BufferedReader reader = new BufferedReader(new FileReader(file))){
+				userIdTextField.setText(reader.readLine());
+				StringBuilder sb = new StringBuilder(reader.readLine());
+				passwordField.setText(sb.reverse().toString());
+				isRememberPassword.setSelected(true);	//	继续勾选"记住密码"
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	// Event Listener on Button[#logInButton].onAction
@@ -47,6 +68,15 @@ public class LogInInterfaceController {
 				if(RemoteHelper.getInstance().getUserService().login(userIdTextField.getText(), passwordField.getText())){
 					ui.Main.mainFrameController.setUserData(userIdTextField.getText());
 					ui.Main.primaryStage.setScene(ui.Main.mainFrameScene);
+					
+					if(isRememberPassword.isSelected()){	//	保存用户密码（密码反转保存）
+						try (FileWriter writer = new FileWriter("user.txt", false)){
+							StringBuilder sb = new StringBuilder(passwordField.getText());
+							writer.write(userIdTextField.getText()+System.lineSeparator()+sb.reverse().toString());
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
 				}
 				else{
 					showAlert(AlertType.ERROR, "错误", "登录失败", "用户名或密码错误");
