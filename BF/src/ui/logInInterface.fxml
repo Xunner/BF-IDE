@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#typeKey" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.LogInInterfaceController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#typeKey" prefHeight="400.0" prefWidth="600.0" stylesheets="@javafx.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.LogInInterfaceController">
    <children>
-      <VBox alignment="CENTER_LEFT" layoutX="150.0" layoutY="86.0" prefHeight="270.0" prefWidth="300.0" spacing="25.0">
+      <ImageView fitHeight="456.0" fitWidth="1241.0" layoutX="-40.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" scaleY="1.05">
+         <image>
+            <Image url="@background.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="104.0" fitWidth="69.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@silhouette.png" />
+         </image>
+      </ImageView>
+      <VBox alignment="CENTER" layoutX="150.0" layoutY="86.0" prefHeight="270.0" prefWidth="300.0" spacing="25.0">
          <children>
+            <Label fx:id="nameLabel" alignment="CENTER" contentDisplay="CENTER" />
             <TextField fx:id="userIdTextField" promptText="用户名" />
             <PasswordField fx:id="passwordField" promptText="密码" />
             <CheckBox fx:id="isRememberPassword" mnemonicParsing="false" text="记住密码" />
@@ -19,6 +32,5 @@
             </HBox>
          </children>
       </VBox>
-      <Label fx:id="nameLabel" layoutX="250.0" layoutY="58.0" />
    </children>
 </AnchorPane>
