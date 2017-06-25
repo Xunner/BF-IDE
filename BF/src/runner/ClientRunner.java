@@ -48,6 +48,7 @@ public class ClientRunner {
 	
 	public static void main(String[] args){
 		mainArgs = args;
+		@SuppressWarnings("unused")
 		ClientRunner cr = new ClientRunner();
 		//cr.test();
 	}

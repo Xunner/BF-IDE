@@ -18,6 +18,10 @@ import rmi.RemoteHelper;
 
 
 public class MainFrame extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextArea textArea;
 	private JLabel resultLabel;
 

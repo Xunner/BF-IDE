@@ -66,7 +66,6 @@
                         <Image url="defaultAvatar.jpg" />
                      </image></ImageView>
                   <Label fx:id="userName" alignment="CENTER" prefWidth="200.0" text="用户名" />
-                  <Button mnemonicParsing="false" onAction="#clickChangePasswordButton" prefWidth="200.0" text="修改密码" />
                   <Button mnemonicParsing="false" onAction="#clickLogOutButton" prefWidth="200.0" text="退出登录" />
                </children>
             </FlowPane>

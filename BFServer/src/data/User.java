@@ -3,32 +3,39 @@ package data;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import javafx.scene.image.ImageView;
-
 public class User implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7148369978762072720L;
+	private static final long serialVersionUID = -8401923436488146777L;
 	private String name;
 	private String password;
-	private ImageView avatar;
+//	transient private ImageView avatar;
 	ArrayList<String> fileNamesOfCodes;
 	
 	public User(String name, String password){
 		this.name = name;
 		this.password = password;
 		fileNamesOfCodes = new ArrayList<String>();
-		this.avatar = null;
+//		this.avatar = null;
 	}
 	
 	public void setPassword(String newPassword){
 		this.password = newPassword;
 	}
 	
-	public void setAvatar(ImageView avatar){
-		this.avatar = avatar;
-	}
+//	public void setAvatar(ImageView avatar){
+//		this.avatar = avatar;
+//		File file = new File(name+".png");
+//		if(file.exists()){
+//			file.delete();
+//		}
+//		try {
+//			ImageIO.write(SwingFXUtils.fromFXImage(avatar.getImage(), null), "png", file);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	public boolean isPasswordCorrect(String inputPassword){
 		return password.equals(inputPassword);
@@ -42,9 +49,15 @@ public class User implements Serializable{
 		return fileNamesOfCodes;
 	}
 	
-	public ImageView getAvatar(){
-		return this.avatar;
-	}
+//	public ImageView getAvatar(){
+//		File file = new File(name+".png");
+//		if(file.exists()){
+//			return new ImageView(new Image(file.toURI().toString()));
+//		}
+//		else{
+//			return this.avatar;
+//		}
+//	}
 	
 	public String getPassword(){
 		return password;

@@ -3,7 +3,6 @@ package rmi;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import javafx.scene.image.ImageView;
 import service.ExecuteService;
 import service.IOService;
 import service.UserService;
@@ -73,16 +72,16 @@ public class DataRemoteObject extends UnicastRemoteObject implements IOService, 
 		return executeService.OOKExecute(code, param);
 	}
 
-	@Override
-	public ImageView getAvatar(String username) throws RemoteException{
-		// TODO Auto-generated method stub
-		return userService.getAvatar(username);
-	}
-
-	@Override
-	public boolean setAvatar(String username, ImageView avatar) throws RemoteException {
-		// TODO Auto-generated method stub
-		return userService.setAvatar(username, avatar);
-	}
+//	@Override
+//	public ImageView getAvatar(String username) throws RemoteException{
+//		// TODO Auto-generated method stub
+//		return userService.getAvatar(username);
+//	}
+//
+//	@Override
+//	public boolean setAvatar(String username, ImageView avatar) throws RemoteException {
+//		// TODO Auto-generated method stub
+//		return userService.setAvatar(username, avatar);
+//	}
 
 }

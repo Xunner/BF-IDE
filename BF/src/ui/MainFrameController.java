@@ -2,6 +2,12 @@ package ui;
 
 import javafx.fxml.FXML;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,10 +25,11 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 
 import javafx.scene.control.TextArea;
-
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import rmi.RemoteHelper;
 
 import javafx.scene.control.Menu;
@@ -56,8 +63,6 @@ public class MainFrameController {
 	private BooleanProperty isSaved;
 	
 	public void init(){
-		userDisplayPicture = null;
-		
 		codeArea.textProperty().addListener(cl -> {
 			isSaved.setValue(false);
 		});
@@ -191,13 +196,12 @@ public class MainFrameController {
 		userName.setText(userId);
 		refreshOpenMenu();
 		loggedInPane.setExpanded(false);
-		try {
-			userDisplayPicture = RemoteHelper.getInstance().getUserService().getAvatar(userId);
-		} catch (RemoteException e) {
-			e.printStackTrace();
+		File file = new File(userId+".jpg");
+		if(file.exists()){
+			userDisplayPicture.setImage(new Image(file.toURI().toString()));
 		}
-		if(userDisplayPicture==null){
-			userDisplayPicture = new ImageView("defaultAvatar.jpg");
+		else{
+			userDisplayPicture.setImage(new Image("defaultAvatar.jpg"));
 		}
 	}
 	
@@ -311,12 +315,25 @@ public class MainFrameController {
 	}
 	
 	@FXML
-	public void clickChangePasswordButton(ActionEvent event){
-		//	TODO
-	}
-	
-	@FXML
 	public void changeAvatar(MouseEvent event){
-		//	TODO
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG", "*.jpg"));
+		fileChooser.setTitle("设置头像");
+		File file = fileChooser.showOpenDialog(ui.Main.primaryStage);
+		if(file!=null){
+			userDisplayPicture.setImage(new Image(file.toURI().toString()));
+			//	存储图片在客户端目录下
+			File file2 = new File(userName.getText()+".jpg");
+			try(FileInputStream fi = new FileInputStream(file);
+					FileOutputStream fo = new FileOutputStream(file2);
+					FileChannel in = fi.getChannel();
+					FileChannel out = fo.getChannel()){
+				in.transferTo(0, in.size(), out);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
