@@ -6,6 +6,8 @@ import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 
 import javafx.scene.control.TitledPane;
@@ -19,8 +21,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import rmi.RemoteHelper;
 
 import javafx.scene.control.Menu;
@@ -51,18 +53,30 @@ public class MainFrameController {
 	/**
 	 * 当前代码是否已保存
 	 */
-	private boolean isSaved = true;
+	private BooleanProperty isSaved;
 	
 	public void init(){
+		userDisplayPicture = null;
+		
 		codeArea.textProperty().addListener(cl -> {
-			isSaved = false;
+			isSaved.setValue(false);
+		});
+		
+		isSaved = new SimpleBooleanProperty(true);
+		isSaved.addListener(cl -> {
+			if(isSaved.getValue()){
+				ui.Main.primaryStage.setTitle(ui.Main.Name);
+			}
+			else{
+				ui.Main.primaryStage.setTitle(ui.Main.Name+"*");
+			}
 		});
 	}
 
 	// Event Listener on MenuItem.onAction
 	@FXML
 	public void clickSaveMenuItem(ActionEvent event) {
-		if(!isSaved){
+		if(!isSaved.getValue()){
 			LocalDateTime localDateTime = LocalDateTime.now();
 			String time = localDateTime.format(DateTimeFormatter.ISO_LOCAL_TIME).replaceAll(":", "-");
 			if(time.contains(".")){
@@ -81,13 +95,13 @@ public class MainFrameController {
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-			isSaved = true;
+			isSaved.setValue(true);
 		}
 	}
 	// Event Listener on MenuItem.onAction
 	@FXML
 	public void clickExitMenuItem(ActionEvent event) {
-		if(isSaved){
+		if(isSaved.getValue()){
 			exit();
 		}
 		else{
@@ -142,6 +156,28 @@ public class MainFrameController {
 	// Event Listener on Button.onAction
 	@FXML
 	public void clickLogOutButton(ActionEvent event) {
+		if(isSaved.getValue()){
+			logOut();
+		}
+		else{
+			Alert alert = new Alert(AlertType.CONFIRMATION, "要保存当前代码吗？", 
+					new ButtonType("是", ButtonData.YES),
+					new ButtonType("否", ButtonData.NO),
+					new ButtonType("取消", ButtonData.CANCEL_CLOSE));
+			alert.setTitle("确认");
+			alert.setHeaderText("当前代码尚未保存");
+			alert.showAndWait().ifPresent(response -> {
+				if(response.getButtonData() != ButtonData.CANCEL_CLOSE){
+					if(response.getButtonData() == ButtonData.YES){
+						clickSaveMenuItem(null);
+					}
+					logOut();
+				}
+			});
+		}
+	}
+	
+	private void logOut(){
 		try {
 			RemoteHelper.getInstance().getUserService().logout(userName.getText());
 			ui.Main.primaryStage.setScene(ui.Main.logInScene);
@@ -151,9 +187,18 @@ public class MainFrameController {
 	}
 	
 	public void setUserData(String userId){
+		loggedInPane.setText(userId);
 		userName.setText(userId);
 		refreshOpenMenu();
-		// TODO 加载头像功能
+		loggedInPane.setExpanded(false);
+		try {
+			userDisplayPicture = RemoteHelper.getInstance().getUserService().getAvatar(userId);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		if(userDisplayPicture==null){
+			userDisplayPicture = new ImageView("defaultAvatar.jpg");
+		}
 	}
 	
 	private void exit(){
@@ -190,7 +235,7 @@ public class MainFrameController {
 			for(String fileName : fileList){
 				CheckMenuItem menuItem = new CheckMenuItem(fileName);
 				menuItem.setOnAction(e -> {
-					if(!isSaved){
+					if(!isSaved.getValue()){
 						Alert alert = new Alert(AlertType.CONFIRMATION, "要保存当前代码吗？", 
 								new ButtonType("是", ButtonData.YES),
 								new ButtonType("否", ButtonData.NO),
@@ -231,7 +276,7 @@ public class MainFrameController {
 		}
 		menuItem.setSelected(true);
 		
-		isSaved = true;
+		isSaved.setValue(true);
 	}
 	
 	@FXML
@@ -263,5 +308,15 @@ public class MainFrameController {
 			clickExecuteMenuItem(null);
 		default:
 		}
+	}
+	
+	@FXML
+	public void clickChangePasswordButton(ActionEvent event){
+		//	TODO
+	}
+	
+	@FXML
+	public void changeAvatar(MouseEvent event){
+		//	TODO
 	}
 }

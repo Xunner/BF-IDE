@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import data.User;
+import javafx.scene.image.ImageView;
 import service.UserService;
 
 public class UserServiceImpl implements UserService{
@@ -48,10 +49,9 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public boolean login(String username, String password) throws RemoteException {
 		boolean ret = false;
-		for(User u : list){
-			if(u.toString().equals(username) && u.isPasswordCorrect(password)){
-				ret = true;
-			}
+		User u = searchUser(username);
+		if(u!=null && u.isPasswordCorrect(password)){
+			ret = true;
 		}
 		writeList();
 		return ret;
@@ -60,10 +60,9 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public boolean logout(String username) throws RemoteException {
 		boolean ret = false;
-		for(User u : list){
-			if(u.toString().equals(username)){
-				ret = true;
-			}
+		User u = searchUser(username);
+		if(u!=null){
+			ret = true;
 		}
 		writeList();
 		return ret;
@@ -71,16 +70,16 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public boolean register(String username, String password) throws RemoteException {
-		for(User u : list){
-			if(u.toString().equals(username)){
-				return false;
-			}
+		boolean ret = false;
+		User u = searchUser(username);
+		if(u==null){
+			list.add(new User(username, password));
+			writeList();
+			ret = true;
 		}
-		list.add(new User(username, password));
-		writeList();
-		return true;
+		return ret;
 	}
-	
+
 	public static void writeList(){
 		File file = new File("list.ser");
 		if(!file.exists()){
@@ -105,5 +104,37 @@ public class UserServiceImpl implements UserService{
 
 	public static ArrayList<User> getUserList(){
 		return list;
+	}
+	
+	private User searchUser(String username){
+		for(User u : list){
+			if(u.toString().equals(username)){
+				return u;
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public ImageView getAvatar(String username) {
+		User u = searchUser(username);
+		if(u!=null){
+			return u.getAvatar();
+		}
+		else{
+			return null;
+		}
+	}
+
+	@Override
+	public boolean setAvatar(String username, ImageView avatar) throws RemoteException {
+		User u = searchUser(username);
+		if(u!=null){
+			u.setAvatar(avatar);
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }
