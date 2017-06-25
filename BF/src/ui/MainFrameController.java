@@ -29,6 +29,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import logic.Fallback;
 import rmi.RemoteHelper;
@@ -57,6 +58,8 @@ public class MainFrameController {
 	private ImageView userDisplayPicture;
 	@FXML
 	private Label userName;
+	@FXML
+	private Circle light;
 	
 	/**
 	 * 当前代码是否已保存
@@ -82,6 +85,8 @@ public class MainFrameController {
 				ui.Main.primaryStage.setTitle(ui.Main.Name+"*");
 			}
 		});
+		
+//		light.stroke
 	}
 
 	// Event Listener on MenuItem.onAction
