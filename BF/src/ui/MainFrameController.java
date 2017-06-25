@@ -30,6 +30,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
+import logic.Fallback;
 import rmi.RemoteHelper;
 
 import javafx.scene.control.Menu;
@@ -62,9 +63,14 @@ public class MainFrameController {
 	 */
 	private BooleanProperty isSaved;
 	
+	private Fallback fallback;
+	
 	public void init(){
+		//	界面
 		codeArea.textProperty().addListener(cl -> {
-			isSaved.setValue(false);
+			if(fallback.push(codeArea.getText())){
+				isSaved.setValue(false);
+			}
 		});
 		
 		isSaved = new SimpleBooleanProperty(true);
@@ -192,6 +198,7 @@ public class MainFrameController {
 	}
 	
 	public void setUserData(String userId){
+		//	界面
 		loggedInPane.setText(userId);
 		userName.setText(userId);
 		refreshOpenMenu();
@@ -203,6 +210,9 @@ public class MainFrameController {
 		else{
 			userDisplayPicture.setImage(new Image("defaultAvatar.jpg"));
 		}
+		
+		//	逻辑
+		fallback = new Fallback("");
 	}
 	
 	private void exit(){
@@ -258,6 +268,7 @@ public class MainFrameController {
 					else{
 						openAFile(fileName, menuItem);
 					}
+					fallback = new Fallback(codeArea.getText());
 				});
 				openMenu.getItems().add(menuItem);
 			}
@@ -290,14 +301,24 @@ public class MainFrameController {
 			if(event.isControlDown()){
 				clickSaveMenuItem(null);
 			}
+			break;
+		default:
+		}
+	}
+	
+	@FXML
+	public void typeKeyAtCodeArea(KeyEvent event){
+		switch(event.getCode()){
 		case Z:
 			if(event.isControlDown()){
-				//	TODO
+				codeArea.setText(fallback.undo());
 			}
+			break;
 		case Y:
 			if(event.isControlDown()){
-				//	TODO
+				codeArea.setText(fallback.redo());
 			}
+			break;
 		default:
 		}
 	}

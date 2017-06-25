@@ -40,7 +40,7 @@
             </MenuBar>
          </top>
          <center>
-            <TextArea fx:id="codeArea" prefHeight="400.0" prefWidth="800.0" promptText="请开始你的表演：" BorderPane.alignment="CENTER" />
+            <TextArea fx:id="codeArea" onKeyPressed="#typeKeyAtCodeArea" prefHeight="400.0" prefWidth="800.0" promptText="请开始你的表演：" BorderPane.alignment="CENTER" />
          </center>
          <bottom>
             <VBox>
