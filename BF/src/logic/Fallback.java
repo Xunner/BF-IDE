@@ -8,28 +8,25 @@ import java.util.ArrayList;
  *
  */
 public class Fallback {
-	private ArrayList<String> former;
-	private ArrayList<String> latter;
-	
-	public Fallback(){
-		former = new ArrayList<String>();
-		latter = new ArrayList<String>();
-	}
+	private ArrayList<String> former = new ArrayList<String>();
+	private ArrayList<String> latter = new ArrayList<String>();
 	
 	public Fallback(String code){
-		this();
 		former.add(code);
 	}
 	
-	public boolean push(String code){
+	public boolean isPushable(String code){
 		if(former.size()==0 || !former.get(former.size()-1).equals(code)){
-			former.add(code);
-			latter.clear();
 			return true;
 		}
 		else{
 			return false;
 		}
+	}
+	
+	public void push(String code){
+		former.add(code);
+		latter.clear();
 	}
 	
 	public String undo(){

@@ -11,6 +11,8 @@ import java.nio.channels.FileChannel;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.animation.Animation;
 import javafx.animation.FillTransition;
@@ -63,6 +65,11 @@ public class MainFrameController {
 	private ImageView userDisplayPicture;
 	@FXML
 	private Label userName;
+	
+	/**
+	 * Indicator light<br>
+	 * 用于指示当前代码是否存在非法字符（串）
+	 */
 	@FXML
 	private Circle light;
 	
@@ -87,18 +94,36 @@ public class MainFrameController {
 	public static final String BF = "BF";
 	public static final String OOK = "Ook!";
 	
+	/**
+	 * 用于撤销操作的计时器
+	 */
+	private Timer timer = null;
+	
 	public void init(){
 		//	界面
 		codeArea.textProperty().addListener(cl -> {
-			if(fallback.push(codeArea.getText())){
+			if(fallback.isPushable(codeArea.getText())){
 				isSaved.setValue(false);
 				
-				if(checkIfCodeLegal()){
-					isCodeLegal.setValue(true);
+				//	更新计时器
+				if(timer!=null){	//	若已有计时，取消之
+					timer.cancel();
 				}
-				else{
-					isCodeLegal.setValue(false);
-				}
+				timer = new Timer();
+				timer.schedule(new TimerTask(){
+					@Override
+					public void run() {
+						fallback.push(codeArea.getText());
+					}
+				}, 2000L);
+			}
+			
+			//	检查代码以刷新indicator light
+			if(checkIfCodeLegal()){
+				isCodeLegal.setValue(true);
+			}
+			else{
+				isCodeLegal.setValue(false);
 			}
 		});
 		
