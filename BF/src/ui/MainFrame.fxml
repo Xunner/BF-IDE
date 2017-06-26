@@ -73,29 +73,7 @@
             </FlowPane>
          </content>
       </TitledPane>
-      <Circle fx:id="light" layoutX="490.0" radius="25.0" strokeLineJoin="BEVEL" strokeType="OUTSIDE" strokeWidth="20.0" AnchorPane.topAnchor="-20.0">
-         <fill>
-            <RadialGradient centerX="0.38636363636363635" centerY="0.48058252427184467" radius="0.5">
-               <stops>
-                  <Stop color="WHITE" />
-                  <Stop color="WHITE" offset="0.006896551724137931" />
-                  <Stop color="WHITE" offset="0.03103448275862069" />
-                  <Stop color="WHITE" offset="0.041379310344827586" />
-                  <Stop color="#11c926" offset="1.0" />
-               </stops>
-            </RadialGradient>
-         </fill>
-         <stroke>
-            <RadialGradient centerX="0.46590909090909094" centerY="0.5097087378640777" cycleMethod="REFLECT" focusDistance="0.14634146341463405" radius="1.0">
-               <stops>
-                  <Stop color="#4bda3b" />
-                  <Stop color="#4bda3b" offset="0.30689655172413793" />
-                  <Stop color="#4bda3b" offset="0.35517241379310344" />
-                  <Stop color="#c2f0c71c" offset="0.8413793103448275" />
-                  <Stop color="#c2f0c71c" offset="1.0" />
-               </stops>
-            </RadialGradient>
-         </stroke>
+      <Circle fx:id="light" fill="#2de12d" layoutX="480.0" radius="25.0" strokeLineJoin="BEVEL" strokeType="OUTSIDE" strokeWidth="15.0" AnchorPane.topAnchor="0.0">
       </Circle>
    </children>
 </AnchorPane>

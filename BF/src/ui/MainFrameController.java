@@ -12,6 +12,8 @@ import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import javafx.animation.Animation;
+import javafx.animation.FillTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -29,8 +31,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 import logic.Fallback;
 import rmi.RemoteHelper;
 
@@ -61,6 +65,8 @@ public class MainFrameController {
 	@FXML
 	private Circle light;
 	
+	private FillTransition fillTransition;
+	
 	/**
 	 * 当前代码是否已保存
 	 */
@@ -73,6 +79,7 @@ public class MainFrameController {
 		codeArea.textProperty().addListener(cl -> {
 			if(fallback.push(codeArea.getText())){
 				isSaved.setValue(false);
+				checkCode();
 			}
 		});
 		
@@ -86,7 +93,14 @@ public class MainFrameController {
 			}
 		});
 		
-//		light.stroke
+		fillTransition = new FillTransition(Duration.seconds(1), light, Color.SPRINGGREEN, Color.LAWNGREEN);
+		fillTransition.setAutoReverse(true);
+		fillTransition.setCycleCount(Animation.INDEFINITE);
+	}
+
+	private void checkCode() {
+		String code = codeArea.getText();
+		
 	}
 
 	// Event Listener on MenuItem.onAction
@@ -197,6 +211,7 @@ public class MainFrameController {
 		try {
 			RemoteHelper.getInstance().getUserService().logout(userName.getText());
 			ui.Main.primaryStage.setScene(ui.Main.logInScene);
+			fillTransition.stop();
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -215,6 +230,7 @@ public class MainFrameController {
 		else{
 			userDisplayPicture.setImage(new Image("defaultAvatar.jpg"));
 		}
+		fillTransition.play();	//	启动呼吸灯
 		
 		//	逻辑
 		fallback = new Fallback("");
