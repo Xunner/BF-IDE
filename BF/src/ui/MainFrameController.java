@@ -35,6 +35,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import logic.CodeInquisitor;
 import logic.Fallback;
 import rmi.RemoteHelper;
 
@@ -72,14 +73,29 @@ public class MainFrameController {
 	 */
 	private BooleanProperty isSaved;
 	
+	private BooleanProperty isCodeLegal;
+	
 	private Fallback fallback;
+	
+	private CodeInquisitor codeInquisitor;
+	
+	private static final Color GREEN1 = Color.SPRINGGREEN;
+	private static final Color GREEN2 = Color.LAWNGREEN;
+	private static final Color RED1 = Color.RED;
+	private static final Color RED2 = Color.BROWN;
 	
 	public void init(){
 		//	界面
 		codeArea.textProperty().addListener(cl -> {
 			if(fallback.push(codeArea.getText())){
 				isSaved.setValue(false);
-				checkCode();
+				
+				if(checkIfCodeLegal()){
+					isCodeLegal.setValue(true);
+				}
+				else{
+					isCodeLegal.setValue(false);
+				}
 			}
 		});
 		
@@ -93,14 +109,50 @@ public class MainFrameController {
 			}
 		});
 		
-		fillTransition = new FillTransition(Duration.seconds(1), light, Color.SPRINGGREEN, Color.LAWNGREEN);
-		fillTransition.setAutoReverse(true);
-		fillTransition.setCycleCount(Animation.INDEFINITE);
+		isCodeLegal = new SimpleBooleanProperty(true);
+		isCodeLegal.addListener(cl -> {
+			fillTransition.stop();
+			fillTransition = new FillTransition(Duration.seconds(0.9), light);
+			if(isCodeLegal.getValue()){
+				fillTransition.setToValue(GREEN1);
+				fillTransition.setOnFinished(e -> {
+					fillTransition = new FillTransition(Duration.seconds(1), light, GREEN1, GREEN2);
+					fillTransition.setAutoReverse(true);
+					fillTransition.setCycleCount(Animation.INDEFINITE);
+					fillTransition.play();	//	启动呼吸灯
+				});
+			}
+			else{
+				fillTransition.setToValue(RED1);
+				fillTransition.setOnFinished(e -> {
+					fillTransition = new FillTransition(Duration.seconds(1), light, RED1, RED2);
+					fillTransition.setAutoReverse(true);
+					fillTransition.setCycleCount(Animation.INDEFINITE);
+					fillTransition.play();	//	启动呼吸灯
+				});
+			}
+			fillTransition.play();
+		});
+		
+		//	逻辑
+		codeInquisitor = new CodeInquisitor();
 	}
 
-	private void checkCode() {
-		String code = codeArea.getText();
-		
+	private boolean checkIfCodeLegal() {
+		String language = null;
+		for(MenuItem mi : languageMenu.getItems()){
+			CheckMenuItem cmi = (CheckMenuItem) mi;
+			if(cmi.isSelected()){
+				language = cmi.getText();
+				break;
+			}
+		}
+		if(language!=null){
+			return codeInquisitor.isCodeLegal(codeArea.getText(), language);
+		}
+		else{
+			return true;
+		}
 	}
 
 	// Event Listener on MenuItem.onAction
@@ -230,6 +282,10 @@ public class MainFrameController {
 		else{
 			userDisplayPicture.setImage(new Image("defaultAvatar.jpg"));
 		}
+		
+		fillTransition = new FillTransition(Duration.seconds(1), light, GREEN1, GREEN2);
+		fillTransition.setAutoReverse(true);
+		fillTransition.setCycleCount(Animation.INDEFINITE);
 		fillTransition.play();	//	启动呼吸灯
 		
 		//	逻辑
