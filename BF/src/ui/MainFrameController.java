@@ -263,6 +263,11 @@ public class MainFrameController {
 		try {
 			RemoteHelper.getInstance().getUserService().logout(userName.getText());
 			ui.Main.primaryStage.setScene(ui.Main.logInScene);
+			
+			//	界面重置
+			codeArea.setText("");
+			inputArea.setText("");
+			outputArea.setText("");
 			fillTransition.stop();
 		} catch (RemoteException e) {
 			e.printStackTrace();
