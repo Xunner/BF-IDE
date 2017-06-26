@@ -13,22 +13,30 @@ public class CodeInquisitor {
 	}
 	
 	public boolean isCodeLegal(String code, String language){
-		String standardCode = code.replaceAll(" ", "").replaceAll(System.lineSeparator(), "");
+		String standardCode = code.replaceAll(" ", "").replaceAll("\r\n", "").replaceAll("\n", "");
 		switch(language){
-		case "BF":
+		case ui.MainFrameController.BF:
 			for(char c : standardCode.toCharArray()){
 				if(!bfCharacters.contains(c)){
 					return false;
 				}
 			}
 			break;
-		case "OOK":
-			for(int i=0; i+4<=standardCode.length(); i++){
-				if(ookCharacters.contains(code.substring(i, i+4))){
-					i+=3;
-				}
-				else{
-					return false;
+		case ui.MainFrameController.OOK:
+			if(standardCode.isEmpty()){
+				break;
+			}
+			else if(standardCode.length()<4){
+				return false;
+			}
+			else{
+				for(int i=0; i+4<=standardCode.length(); i++){
+					if(ookCharacters.contains(standardCode.substring(i, i+4))){
+						i+=3;
+					}
+					else{
+						return false;
+					}
 				}
 			}
 			break;

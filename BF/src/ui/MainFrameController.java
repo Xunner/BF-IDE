@@ -84,6 +84,9 @@ public class MainFrameController {
 	private static final Color RED1 = Color.RED;
 	private static final Color RED2 = Color.BROWN;
 	
+	public static final String BF = "BF";
+	public static final String OOK = "Ook!";
+	
 	public void init(){
 		//	界面
 		codeArea.textProperty().addListener(cl -> {
@@ -216,10 +219,10 @@ public class MainFrameController {
 		}
 		try {
 			switch(language){
-			case "BF":
+			case BF:
 				outputArea.setText(RemoteHelper.getInstance().getExecuteService().BFExecute(codeArea.getText(), inputArea.getText()));
 				break;
-			case "OOK":
+			case OOK:
 				outputArea.setText(RemoteHelper.getInstance().getExecuteService().OOKExecute(codeArea.getText(), inputArea.getText()));
 			}
 		} catch (RemoteException e) {
@@ -313,6 +316,15 @@ public class MainFrameController {
 			cmi.setSelected(false);
 		}
 		BFMenuItem.setSelected(true);
+		languageMenu.setText(BF);
+		
+		//	刷新指示灯
+		if(checkIfCodeLegal()){
+			isCodeLegal.setValue(true);
+		}
+		else{
+			isCodeLegal.setValue(false);
+		}
 	}
 	
 	@FXML
@@ -322,6 +334,15 @@ public class MainFrameController {
 			cmi.setSelected(false);
 		}
 		OOKMenuItem.setSelected(true);
+		languageMenu.setText(OOK);
+
+		//	刷新指示灯
+		if(checkIfCodeLegal()){
+			isCodeLegal.setValue(true);
+		}
+		else{
+			isCodeLegal.setValue(false);
+		}
 	}
 	
 	public void refreshOpenMenu(){
