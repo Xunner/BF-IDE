@@ -16,7 +16,7 @@ import java.util.TimerTask;
 
 import javafx.animation.Animation;
 import javafx.animation.FillTransition;
-import javafx.animation.PathTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -35,10 +35,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcTo;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import logic.CodeInquisitor;
@@ -258,26 +255,32 @@ public class MainFrameController {
 			e.printStackTrace();
 		}
 		
-		//	呼吸灯颤动动画 TODO
-		PathTransition pathTransition = new PathTransition(Duration.seconds(0.3), light);
-		Path path = new Path();
+		//	呼吸灯颤动动画
+		TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.1), light);
+		translateTransition.setAutoReverse(true);
+		translateTransition.setCycleCount(4);
+		translateTransition.setToX(8);
+		translateTransition.play();
 		
-		path.getElements().add(new MoveTo(light.getCenterX(), light.getCenterY()));
-		ArcTo arcTo = new ArcTo();
-		arcTo.setX(light.getCenterX()+20);
-		arcTo.setY(light.getCenterY()+20);
-		arcTo.setRadiusX(20);
-		arcTo.setRadiusY(20);
-		path.getElements().add(arcTo);
-		pathTransition.setPath(path);
-		pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-		pathTransition.setCycleCount(2);
-		pathTransition.setAutoReverse(true);
-		pathTransition.setOnFinished(e ->{
-			System.out.println("动画结束");
-		});
-		System.out.println("动画即将被执行");
-		pathTransition.play();
+//		PathTransition pathTransition = new PathTransition(Duration.seconds(0.3), light);
+//		Path path = new Path();
+//		
+//		path.getElements().add(new MoveTo(light.getCenterX(), light.getCenterY()));
+//		ArcTo arcTo = new ArcTo();
+//		arcTo.setX(light.getCenterX()+20);
+//		arcTo.setY(light.getCenterY()+20);
+//		arcTo.setRadiusX(20);
+//		arcTo.setRadiusY(20);
+//		path.getElements().add(arcTo);
+//		pathTransition.setPath(path);
+//		pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+//		pathTransition.setCycleCount(2);
+//		pathTransition.setAutoReverse(true);
+//		pathTransition.setOnFinished(e ->{
+//			System.out.println("动画结束");
+//		});
+//		System.out.println("动画即将被执行");
+//		pathTransition.play();
 	}
 	// Event Listener on MenuItem.onAction
 	@FXML
