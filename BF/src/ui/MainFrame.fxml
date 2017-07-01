@@ -10,6 +10,11 @@
 
 <AnchorPane onKeyPressed="#pressKey" onKeyReleased="#releaseKey" stylesheets="@javafx.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.MainFrameController">
    <children>
+      <ImageView fitHeight="446.0" fitWidth="808.0" layoutY="170.0" pickOnBounds="true" preserveRatio="true" scaleY="1.6">
+         <image>
+            <Image url="@mainFrameBackground.jpg" />
+         </image>
+      </ImageView>
       <BorderPane>
          <top>
             <MenuBar BorderPane.alignment="CENTER">
@@ -44,7 +49,7 @@
             </MenuBar>
          </top>
          <center>
-            <TextArea fx:id="codeArea" onKeyPressed="#typeKeyAtCodeArea" prefHeight="400.0" prefWidth="800.0" promptText="请开始你的表演：" BorderPane.alignment="CENTER" />
+            <TextArea fx:id="codeArea" onKeyPressed="#typeKeyAtCodeArea" opacity="0.7" prefHeight="400.0" prefWidth="800.0" promptText="请开始你的表演：" BorderPane.alignment="CENTER" />
          </center>
          <bottom>
             <VBox>
@@ -52,9 +57,9 @@
                   <Separator prefHeight="8.0" prefWidth="200.0" />
                   <HBox BorderPane.alignment="CENTER">
                      <children>
-                        <TextArea fx:id="inputArea" prefHeight="200.0" prefWidth="400.0" promptText="输入" />
+                        <TextArea fx:id="inputArea" opacity="0.7" prefHeight="200.0" prefWidth="400.0" promptText="输入" />
                         <Separator orientation="VERTICAL" prefWidth="8.0" />
-                        <TextArea fx:id="outputArea" prefHeight="200.0" prefWidth="400.0" promptText="输出" />
+                        <TextArea fx:id="outputArea" opacity="0.7" prefHeight="200.0" prefWidth="400.0" promptText="输出" />
                      </children>
                   </HBox>
                </children>
