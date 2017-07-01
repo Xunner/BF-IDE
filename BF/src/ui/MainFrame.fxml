@@ -16,12 +16,14 @@
               <menus>
                 <Menu mnemonicParsing="false" text="开始">
                   <items>
+                        <MenuItem mnemonicParsing="false" onAction="#clickNewMenuItem" text="新建" />
+                        <Menu fx:id="openMenu" mnemonicParsing="false" text="打开" />
                         <MenuItem mnemonicParsing="false" onAction="#clickSaveMenuItem" text="保存" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                     <MenuItem mnemonicParsing="false" onAction="#clickExitMenuItem" text="退出" />
                   </items>
                 </Menu>
-                <Menu fx:id="openMenu" mnemonicParsing="false" text="打开" />
+                <Menu fx:id="versionMenu" mnemonicParsing="false" text="历史版本" />
                 <Menu mnemonicParsing="false" text="运行">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#clickExecuteMenuItem" text="执行" />
@@ -73,7 +75,7 @@
             </FlowPane>
          </content>
       </TitledPane>
-      <Circle fx:id="light" fill="#2de12d" layoutX="480.0" radius="25.0" strokeLineJoin="BEVEL" strokeType="OUTSIDE" strokeWidth="15.0" AnchorPane.topAnchor="0.0">
+      <Circle fx:id="light" fill="#2de12d" layoutX="500.0" radius="25.0" strokeLineJoin="BEVEL" strokeType="OUTSIDE" strokeWidth="15.0" AnchorPane.topAnchor="0.0">
       </Circle>
    </children>
 </AnchorPane>

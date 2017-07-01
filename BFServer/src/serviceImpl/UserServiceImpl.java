@@ -113,6 +113,33 @@ public class UserServiceImpl implements UserService{
 		}
 		return null;
 	}
+
+	@Override
+	public String readDirList(String userId) throws RemoteException {
+		User u = searchUser(userId);
+		if(u!=null){
+			StringBuilder sb = new StringBuilder();
+			for(String dir : u.getDirNameList()){
+				sb.append(dir+System.lineSeparator());
+			}
+			return sb.toString();
+		}
+		else{
+			System.out.println("readDirList时，读取list错误");
+			return null;
+		}
+	}
+
+	@Override
+	public ArrayList<String> readFileList(String userId, String dirName) throws RemoteException {
+		User u = searchUser(userId);
+		if(u!=null)
+			return u.getFileNameList(dirName);
+		else{
+			System.out.println("readFileList时，读取list错误");
+			return null;
+		}
+	}
 	
 //	@Override
 //	public ImageView getAvatar(String username) {

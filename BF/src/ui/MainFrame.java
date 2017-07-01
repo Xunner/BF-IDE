@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.rmi.RemoteException;
+//import java.rmi.RemoteException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,7 +14,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTextArea;
 
-import rmi.RemoteHelper;
+//import rmi.RemoteHelper;
 
 
 public class MainFrame extends JFrame {
@@ -85,12 +85,12 @@ public class MainFrame extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String code = textArea.getText();
-			try {
-				RemoteHelper.getInstance().getIOService().writeFile(code, "admin", "code");
-			} catch (RemoteException e1) {
-				e1.printStackTrace();
-			}
+//			String code = textArea.getText();
+//			try {
+//				RemoteHelper.getInstance().getIOService().writeFile(code, "admin", "code");
+//			} catch (RemoteException e1) {
+//				e1.printStackTrace();
+//			}
 		}
 
 	}

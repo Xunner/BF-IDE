@@ -31,6 +31,9 @@ public class Main extends Application {
 			primaryStage.setScene(logInScene);
 			primaryStage.setTitle(Name);
 			primaryStage.setResizable(false);
+			primaryStage.setOnCloseRequest(eh -> {
+				exit();
+			});
 			primaryStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -2,21 +2,23 @@ package data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 public class User implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8401923436488146777L;
+	private static final long serialVersionUID = 4057474556142926958L;
 	private String name;
 	private String password;
 //	transient private ImageView avatar;
-	ArrayList<String> fileNamesOfCodes;
+	HashMap<String, ArrayList<String>> dirNames;	//	文件夹名清单（也即项目名清单）（内包含历史版本名）
 	
 	public User(String name, String password){
 		this.name = name;
 		this.password = password;
-		fileNamesOfCodes = new ArrayList<String>();
+		dirNames = new HashMap<String, ArrayList<String>>();
 //		this.avatar = null;
 	}
 	
@@ -41,12 +43,32 @@ public class User implements Serializable{
 		return password.equals(inputPassword);
 	}
 	
-	public boolean addFileName(String fileName){
-		return fileNamesOfCodes.add(fileName);
+	public boolean newDir(String dirName){
+		if(dirNames.containsKey(dirName)){
+			return false;
+		}
+		else{
+			dirNames.put(dirName, new ArrayList<String>());
+			return true;
+		}
 	}
 	
-	public ArrayList<String> getFileList(){
-		return fileNamesOfCodes;
+	public boolean addFileName(String dir, String fileName){
+		ArrayList<String> files = dirNames.get(dir);
+		if(files!=null){
+			return files.add(fileName);
+		}
+		else{
+			return false;
+		}
+	}
+	
+	public Set<String> getDirNameList(){
+		return dirNames.keySet();
+	}
+	
+	public ArrayList<String> getFileNameList(String dirName){
+		return dirNames.get(dirName);
 	}
 	
 //	public ImageView getAvatar(){

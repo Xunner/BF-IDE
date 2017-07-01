@@ -1,6 +1,7 @@
 package ui;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +12,7 @@ import java.nio.channels.FileChannel;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,21 +24,28 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import logic.CodeInquisitor;
 import logic.Fallback;
@@ -44,6 +53,7 @@ import rmi.RemoteHelper;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
 
 public class MainFrameController {
 	@FXML
@@ -99,6 +109,8 @@ public class MainFrameController {
 	 * 用于撤销操作的计时器
 	 */
 	private Timer timer = null;
+	
+	@FXML private Menu versionMenu;
 	
 	public void init(){
 		//	界面
@@ -195,11 +207,11 @@ public class MainFrameController {
 			}
 			try {
 				String fileName = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE) + '-' + time;
-				RemoteHelper.getInstance().getIOService().writeFile(codeArea.getText(), userName.getText(), fileName);
-				refreshOpenMenu();
+				RemoteHelper.getInstance().getIOService().addFile(codeArea.getText(), userName.getText(), getSelectedDir().getText(), fileName);
+				refreshVersionMenu();
 				for(MenuItem mi : openMenu.getItems()){
 					if(mi.getText().equals(fileName)){
-						((CheckMenuItem)mi).setSelected(true);
+						((RadioMenuItem)mi).setSelected(true);
 						break;
 					}
 				}
@@ -209,6 +221,20 @@ public class MainFrameController {
 			isSaved.setValue(true);
 		}
 	}
+	
+	/**
+	 * 获取当前打开的文件的菜单项
+	 * @return 当前的openMenu中的选中项
+	 */
+	private RadioMenuItem getSelectedDir() {
+		for(MenuItem mi : openMenu.getItems()){
+			if(((RadioMenuItem)mi).isSelected()){
+				return (RadioMenuItem)mi;
+			}
+		}
+		return null;
+	}
+
 	// Event Listener on MenuItem.onAction
 	@FXML
 	public void clickExitMenuItem(ActionEvent event) {
@@ -259,7 +285,7 @@ public class MainFrameController {
 		TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.1), light);
 		translateTransition.setAutoReverse(true);
 		translateTransition.setCycleCount(4);
-		translateTransition.setToX(8);
+		translateTransition.setToX(15);
 		translateTransition.play();
 		
 //		PathTransition pathTransition = new PathTransition(Duration.seconds(0.3), light);
@@ -334,8 +360,14 @@ public class MainFrameController {
 		//	界面
 		loggedInPane.setText(userId);
 		userName.setText(userId);
-		refreshOpenMenu();
 		loggedInPane.setExpanded(false);
+		
+		refreshOpenMenu();
+		for(MenuItem mi : openMenu.getItems()){	//	选中第一个
+			((RadioMenuItem)mi).fire();
+			break;
+		}
+		
 		File file = new File(userId+".jpg");
 		if(file.exists()){
 			userDisplayPicture.setImage(new Image(file.toURI().toString()));
@@ -398,54 +430,111 @@ public class MainFrameController {
 		}
 	}
 	
-	public void refreshOpenMenu(){
+	public void refreshVersionMenu(){
+		//	获取当前打开的文件的名称
+		String dir = "";
+		for(MenuItem mi : openMenu.getItems()){
+			if(((RadioMenuItem)mi).isSelected()){
+				dir = mi.getText();
+				break;
+			}
+		}
+		
 		try {
-			String[] fileList = RemoteHelper.getInstance().getIOService().readFileList(userName.getText()).split(System.lineSeparator());
-			openMenu.getItems().clear();
-			for(String fileName : fileList){
-				CheckMenuItem menuItem = new CheckMenuItem(fileName);
-				menuItem.setOnAction(e -> {
-					if(!isSaved.getValue()){
-						Alert alert = new Alert(AlertType.CONFIRMATION, "要保存当前代码吗？", 
-								new ButtonType("是", ButtonData.YES),
-								new ButtonType("否", ButtonData.NO),
-								new ButtonType("取消", ButtonData.CANCEL_CLOSE));
-						alert.setTitle("确认");
-						alert.setHeaderText("当前代码尚未保存");
-						alert.showAndWait().ifPresent(response -> {
-							if(response.getButtonData() != ButtonData.CANCEL_CLOSE){
-								if(response.getButtonData() == ButtonData.YES){	//	若选“是”：保存
-									clickSaveMenuItem(null);
+			versionMenu.getItems().clear();
+			ArrayList<String> versionList = RemoteHelper.getInstance().getUserService().readFileList(userName.getText(), dir);
+			if(versionList!=null && !versionList.isEmpty()){
+				ToggleGroup group = new ToggleGroup();
+				for(String fileName : versionList){
+					RadioMenuItem menuItem = new RadioMenuItem(fileName);
+					menuItem.setOnAction(e -> {
+						if(!isSaved.getValue()){
+							Alert alert = new Alert(AlertType.CONFIRMATION, "要保存当前代码吗？", 
+									new ButtonType("是", ButtonData.YES),
+									new ButtonType("否", ButtonData.NO),
+									new ButtonType("取消", ButtonData.CANCEL_CLOSE));
+							alert.setTitle("确认");
+							alert.setHeaderText("当前代码尚未保存");
+							alert.showAndWait().ifPresent(response -> {
+								if(response.getButtonData() != ButtonData.CANCEL_CLOSE){
+									if(response.getButtonData() == ButtonData.YES){	//	若选“是”：保存
+										clickSaveMenuItem(null);
+									}
+									openAFile(fileName, menuItem);
 								}
-								openAFile(fileName, menuItem);
-							}
-						});
-					}
-					else{
-						openAFile(fileName, menuItem);
-					}
-					fallback = new Fallback(codeArea.getText());
-				});
-				openMenu.getItems().add(menuItem);
+							});
+						}
+						else{
+							openAFile(fileName, menuItem);
+						}
+						fallback = new Fallback(codeArea.getText());
+					});
+					menuItem.setToggleGroup(group);
+					versionMenu.getItems().add(menuItem);
+				}
+				versionMenu.setDisable(false);
+			}
+			else{
+				versionMenu.setDisable(true);
 			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void openAFile(String fileName, CheckMenuItem menuItem){
+	public void refreshOpenMenu(){
+		try {
+			String[] fileList = RemoteHelper.getInstance().getUserService().readDirList(userName.getText()).split(System.lineSeparator());
+			openMenu.getItems().clear();
+			if(fileList!=null){
+				ToggleGroup group = new ToggleGroup();
+				for(String fileName : fileList){
+					RadioMenuItem menuItem = new RadioMenuItem(fileName);
+					menuItem.setOnAction(e -> {
+						if(!isSaved.getValue()){
+							Alert alert = new Alert(AlertType.CONFIRMATION, "要保存当前代码吗？", 
+									new ButtonType("是", ButtonData.YES),
+									new ButtonType("否", ButtonData.NO),
+									new ButtonType("取消", ButtonData.CANCEL_CLOSE));
+							alert.setTitle("确认");
+							alert.setHeaderText("当前代码尚未保存");
+							alert.showAndWait().ifPresent(response -> {
+								if(response.getButtonData() != ButtonData.CANCEL_CLOSE){
+									if(response.getButtonData() == ButtonData.YES){	//	若选“是”：保存
+										clickSaveMenuItem(null);
+									}
+									refreshVersionMenu();
+								}
+							});
+						}
+						else{
+							refreshVersionMenu();
+						}
+						
+						fallback = new Fallback(codeArea.getText());
+					});
+					menuItem.setToggleGroup(group);
+					openMenu.getItems().add(menuItem);
+				}
+				openMenu.setDisable(false);
+			}
+			else{
+				openMenu.setDisable(true);
+			}
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void openAFile(String fileName, RadioMenuItem menuItem){
 		//	从服务器获取并显示该版本的代码
 		try {
-			codeArea.setText(RemoteHelper.getInstance().getIOService().readFile(userName.getText(), fileName));
+			codeArea.setText(RemoteHelper.getInstance().getIOService().readFile(userName.getText(), getSelectedDir().getText(), fileName));
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
 		}
 		
-		//	刷新子菜单选中状况
-		for(MenuItem mi : openMenu.getItems()){
-			((CheckMenuItem)mi).setSelected(false);
-		}
-		menuItem.setSelected(true);
+		menuItem.fire();
 		
 		isSaved.setValue(true);
 	}
@@ -512,5 +601,43 @@ public class MainFrameController {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@FXML public void clickNewMenuItem() {
+		Stage alert = new Stage();
+	    alert.setTitle("新建项目");
+	    alert.initModality(Modality.APPLICATION_MODAL);
+	    alert.setMinWidth(300);
+	    alert.setMinHeight(150);
+	    
+	    TextField dirName = new TextField();
+	    dirName.setPromptText("起一个骚气的项目名吧！");
+	    
+	    Button button = new Button("新建");
+	    button.setOnAction(e -> {
+	    	try {
+				if(RemoteHelper.getInstance().getIOService().newDir(userName.getText(), dirName.getText())){
+					refreshOpenMenu();
+				}
+				for(MenuItem mi : openMenu.getItems()){
+					if(mi.getText().equals(dirName)){
+						((RadioMenuItem)mi).fire();
+					}
+					break;
+				}
+			} catch (RemoteException e1) {
+				e1.printStackTrace();
+			}
+	    	alert.close();
+	    });
+	    
+	    VBox box = new VBox(10);
+	    box.getChildren().addAll(dirName, button);
+	    box.setAlignment(Pos.CENTER);
+	    
+	    Scene scene = new Scene(box);
+	    scene.getStylesheets().add(this.getClass().getResource("javafx.css").toExternalForm());
+	    alert.setScene(scene);
+	    alert.showAndWait();
 	}
 }

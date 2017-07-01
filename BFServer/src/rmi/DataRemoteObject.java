@@ -2,6 +2,7 @@ package rmi;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 
 import service.ExecuteService;
 import service.IOService;
@@ -22,24 +23,6 @@ public class DataRemoteObject extends UnicastRemoteObject implements IOService, 
 		iOService = new IOServiceImpl();
 		userService = new UserServiceImpl();
 		executeService = new ExecuteServiceImpl();
-	}
-
-	@Override
-	public boolean writeFile(String file, String userId, String fileName) throws RemoteException{
-		// TODO Auto-generated method stub
-		return iOService.writeFile(file, userId, fileName);
-	}
-
-	@Override
-	public String readFile(String userId, String fileName) throws RemoteException{
-		// TODO Auto-generated method stub
-		return iOService.readFile(userId, fileName);
-	}
-
-	@Override
-	public String readFileList(String userId) throws RemoteException{
-		// TODO Auto-generated method stub
-		return iOService.readFileList(userId);
 	}
 
 	@Override
@@ -70,6 +53,36 @@ public class DataRemoteObject extends UnicastRemoteObject implements IOService, 
 	public String OOKExecute(String code, String param) throws RemoteException {
 		// TODO Auto-generated method stub
 		return executeService.OOKExecute(code, param);
+	}
+
+	@Override
+	public String readDirList(String userId) throws RemoteException {
+		// TODO Auto-generated method stub
+		return userService.readDirList(userId);
+	}
+
+	@Override
+	public ArrayList<String> readFileList(String userId, String dirName) throws RemoteException {
+		// TODO Auto-generated method stub
+		return userService.readFileList(userId, dirName);
+	}
+
+	@Override
+	public boolean newDir(String userId, String dirName) throws RemoteException {
+		// TODO Auto-generated method stub
+		return iOService.newDir(userId, dirName);
+	}
+
+	@Override
+	public boolean addFile(String file, String userId, String dirName, String fileName) throws RemoteException {
+		// TODO Auto-generated method stub
+		return iOService.addFile(file, userId, dirName, fileName);
+	}
+
+	@Override
+	public String readFile(String userId, String dirName, String fileName) throws RemoteException {
+		// TODO Auto-generated method stub
+		return iOService.readFile(userId, dirName, fileName);
 	}
 
 //	@Override
