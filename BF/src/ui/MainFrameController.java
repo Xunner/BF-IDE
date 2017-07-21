@@ -56,8 +56,14 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 
 public class MainFrameController {
+	/**
+	 * 打开文件的菜单
+	 */
 	@FXML
 	private Menu openMenu;
+	/**
+	 * 选择语言菜单
+	 */
 	@FXML
 	private Menu languageMenu;
 	@FXML
@@ -102,14 +108,17 @@ public class MainFrameController {
 	private static final Color RED1 = Color.RED;
 	private static final Color RED2 = Color.BROWN;
 	
-	public static final String BF = "BF";
-	public static final String OOK = "Ook!";
+	public static final String BF = "BF";	//	选择bf语言的标准String
+	public static final String OOK = "Ook!";	//	选择ook语言的标准String
 	
 	/**
 	 * 用于撤销操作的计时器
 	 */
 	private Timer timer = null;
 	
+	/**
+	 * 历史版本选择菜单
+	 */
 	@FXML private Menu versionMenu;
 	
 	public void init(){
@@ -444,7 +453,7 @@ public class MainFrameController {
 			versionMenu.getItems().clear();
 			ArrayList<String> versionList = RemoteHelper.getInstance().getUserService().readFileList(userName.getText(), dir);
 			if(versionList!=null && !versionList.isEmpty()){
-				ToggleGroup group = new ToggleGroup();
+				ToggleGroup group = new ToggleGroup();	//	放进group里以保证选中唯一性，后同
 				for(String fileName : versionList){
 					RadioMenuItem menuItem = new RadioMenuItem(fileName);
 					menuItem.setOnAction(e -> {
@@ -462,11 +471,14 @@ public class MainFrameController {
 									}
 									openAFile(fileName, menuItem);
 								}
+								isSaved.setValue(true);
 							});
+							isSaved.setValue(true);
 						}
 						else{
 							openAFile(fileName, menuItem);
 						}
+						//	配置新的撤销栈
 						fallback = new Fallback(codeArea.getText());
 					});
 					menuItem.setToggleGroup(group);
@@ -487,7 +499,7 @@ public class MainFrameController {
 			String[] fileList = RemoteHelper.getInstance().getUserService().readDirList(userName.getText()).split(System.lineSeparator());
 			openMenu.getItems().clear();
 			if(fileList!=null){
-				ToggleGroup group = new ToggleGroup();
+				ToggleGroup group = new ToggleGroup();	//	同上
 				for(String fileName : fileList){
 					RadioMenuItem menuItem = new RadioMenuItem(fileName);
 					menuItem.setOnAction(e -> {
@@ -503,6 +515,7 @@ public class MainFrameController {
 									if(response.getButtonData() == ButtonData.YES){	//	若选“是”：保存
 										clickSaveMenuItem(null);
 									}
+									isSaved.setValue(true);
 									refreshVersionMenu();
 								}
 							});
@@ -511,6 +524,7 @@ public class MainFrameController {
 							refreshVersionMenu();
 						}
 						
+						//	配置新的撤销栈
 						fallback = new Fallback(codeArea.getText());
 					});
 					menuItem.setToggleGroup(group);
@@ -534,9 +548,11 @@ public class MainFrameController {
 			e1.printStackTrace();
 		}
 		
-		menuItem.fire();
-		
 		isSaved.setValue(true);
+		
+		//	进行一次当前menuItem的选中操作
+//		menuItem.fire();
+		
 	}
 	
 	@FXML
@@ -603,7 +619,7 @@ public class MainFrameController {
 		}
 	}
 
-	@FXML public void clickNewMenuItem() {
+	@FXML public void clickNewMenuItem() {	//	弹出新建窗口
 		Stage alert = new Stage();
 	    alert.setTitle("新建项目");
 	    alert.initModality(Modality.APPLICATION_MODAL);

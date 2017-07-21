@@ -29,7 +29,7 @@ public class ExecuteServiceImpl implements ExecuteService {
 			}
 			else if(cmds[i]==']'){
 				if(indexesOfLeft.isEmpty()){
-					return "MMP";
+					return "ERROR";
 				}
 				else{
 					int tmp = indexesOfLeft.get(indexesOfLeft.size()-1);
@@ -39,11 +39,11 @@ public class ExecuteServiceImpl implements ExecuteService {
 				}
 			}
 		}
-		if(!indexesOfLeft.isEmpty()){
-			return "NMH";
+		if(!indexesOfLeft.isEmpty()){	//	安全检查，未配对则报错
+			return "ERROR";
 		}
 		
-		//	执行代码
+		//	解释执行代码
 		memory.add('\0');
 		for(int i=0; i<cmds.length; i++){
 			switch(cmds[i]){
@@ -89,7 +89,7 @@ public class ExecuteServiceImpl implements ExecuteService {
 	}
 
 	@Override
-	public String OOKExecute(String code, String param) throws RemoteException {
+	public String OOKExecute(String code, String param) throws RemoteException {	//	依赖BFExecute方法
 		StringBuilder sb = new StringBuilder(code);
 		for(int i=0; i<code.length(); i++){
 			if(i+9<=code.length() && (code.substring(i, i+3) + code.substring(i+4, i+8)).equals("Ook Ook")){

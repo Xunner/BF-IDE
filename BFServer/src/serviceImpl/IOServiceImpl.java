@@ -147,7 +147,7 @@ public class IOServiceImpl implements IOService{
 		StringBuilder sb = new StringBuilder();
 		try(BufferedReader reader = new BufferedReader(new FileReader(f))) {
 			String line;
-			while((line=reader.readLine()) != null){
+			while((line=reader.readLine()) != null){	//	整行读取再整行加载
 				sb.append(line+System.lineSeparator());
 			}
 		} catch (FileNotFoundException e) {

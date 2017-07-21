@@ -3,8 +3,13 @@ package logic;
 import java.util.Arrays;
 import java.util.HashSet;
 
+/**
+ * 实时检查当前代码是否含有不合法字符
+ * @author 巽
+ *
+ */
 public class CodeInquisitor {
-	static private HashSet<Character> bfCharacters;
+	static private HashSet<Character> bfCharacters;	//	合法字符池，下同
 	static private HashSet<String> ookCharacters;
 	
 	public CodeInquisitor(){
