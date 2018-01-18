@@ -1,2 +1,1 @@
-"# BF-IDE" 
-A BF&Ook! IDE for the school homwork.
+A BF & Ook! IDE for the school homework.
